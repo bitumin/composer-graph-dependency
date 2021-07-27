@@ -162,22 +162,22 @@ Available formats are:
 
 ### Create several graphes to a directory named `composer-dependency` in svg format (that is the default format), one by packages indicated. Each graph display one package and all its dependency package.
 ```bash
-./vendor/bin/composer-dependency --separate-graph-packages="vendorA/packageA vendorA/packageB" multi-export
+./vendor/bin/composer-dependency --separate-graph-packages="vendorA/packageA vendorA/packageB" multi_export
 ```
 
 ### Create several graphes to a directory named `composer-dependency` in png format, one by vendor indicated. Each graph displays all vendor packages.
 ```bash
-./vendor/bin/composer-dependency --separate-graph-vendors="vendorA vendorB" --format="png" multi-export
+./vendor/bin/composer-dependency --separate-graph-vendors="vendorA vendorB" --format="png" multi_export
 ```
 
 ### Create several graphes to a directory named `composer-dependency` in png format, one for each package of each vendors indicated.
 ```bash
-./vendor/bin/composer-dependency --separate-graph-vendors-packages="vendorA vendorB" --format="png" multi-export
+./vendor/bin/composer-dependency --separate-graph-vendors-packages="vendorA vendorB" --format="png" multi_export
 ```
 
 ### Combine with filters
 ```bash
-./vendor/bin/composer-dependency --no-packages="vendorA/packageB" --separate-graph-vendors="vendorA vendorB" --format="png" multi-export
+./vendor/bin/composer-dependency --no-packages="vendorA/packageB" --separate-graph-vendors="vendorA vendorB" --format="png" multi_export
 ```
 
 Note that some combinations have no sense. For the moment, there is no control of the consistency of a combinations. It's to you to be carefull. This will be fixed later.

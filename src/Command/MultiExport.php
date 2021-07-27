@@ -51,7 +51,7 @@ class MultiExport extends Command
             'tags'                            => Utils::getOptionAsArray($input->getOption('tags')),
             'no-tags'                         => Utils::getOptionAsArray($input->getOption('no-tags')),
             'dep-tags'                        => Utils::getOptionAsArray($input->getOption('dep-tags')),
-            'no-dep-tags'                     => Utils::getOptionAsArray($input->getOption('no-dep-tags')),
+            'dep-no-tags'                     => Utils::getOptionAsArray($input->getOption('dep-no-tags')),
             'separate_graph_packages'         => Utils::getOptionAsArray($input->getOption('separate-graph-packages')),
             'separate_graph_vendors'          => Utils::getOptionAsArray($input->getOption('separate-graph-vendors')),
             'separate_graph_vendors_packages' => Utils::getOptionAsArray($input->getOption('separate-graph-vendors-packages')),
