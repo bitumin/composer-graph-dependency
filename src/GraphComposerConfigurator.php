@@ -2,9 +2,6 @@
 
 namespace Kassko\Composer\GraphDependency;
 
-use Kassko\Composer\GraphDependency\DependencyAnalyzer;
-use Kassko\Composer\GraphDependency\PackageFilter;
-
 class GraphComposerConfigurator
 {
     private $packageFilter;

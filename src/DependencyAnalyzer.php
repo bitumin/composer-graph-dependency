@@ -2,9 +2,10 @@
 
 namespace Kassko\Composer\GraphDependency;
 
-use JMS\Composer\Exception\MissingLockFileException;
+use InvalidArgumentException;
 use JMS\Composer\Graph\PackageNode;
 use JMS\Composer\Graph\DependencyGraph;
+use RuntimeException;
 
 /**
  * Analyzes dependencies of a project, and returns them as a graph.
@@ -17,21 +18,21 @@ class DependencyAnalyzer
      * @param string        $dir
      * @param PackageFilter $packageFilter
      *
-     * @throws \RuntimeException
-     * @throws \InvalidArgumentException
-     * @return \JMS\Composer\Graph\DependencyGraph
+     * @return DependencyGraph
+     * @throws InvalidArgumentException
+     * @throws RuntimeException
      */
-    public function analyze($dir, PackageFilter $packageFilter)
+    public function analyze(string $dir, PackageFilter $packageFilter): DependencyGraph
     {
-        if ( ! is_dir($dir)) {
-            throw new \InvalidArgumentException(sprintf('The directory "%s" does not exist.', $dir));
+        if (!is_dir($dir)) {
+            throw new InvalidArgumentException(sprintf('The directory "%s" does not exist.', $dir));
         }
 
         if (stream_is_local($dir)) {
             $dir = realpath($dir);
         }
 
-        if ( ! is_file($dir.'/composer.json')) {
+        if (!is_file($dir . '/composer.json')) {
             $graph = new DependencyGraph();
             $graph->getRootPackage()->setAttribute('dir', $dir);
 
@@ -39,20 +40,17 @@ class DependencyAnalyzer
         }
 
         return $this->analyzeComposerData(
-            file_get_contents($dir.'/composer.json'),
+            file_get_contents($dir . '/composer.json'),
             $packageFilter,
-            is_file($dir.'/composer.lock') ? file_get_contents($dir.'/composer.lock') : null,
+            is_file($dir . '/composer.lock') ? file_get_contents($dir . '/composer.lock') : null,
             $dir
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function analyzeComposerData($composerJsonData, PackageFilter $packageFilter, $composerLockData = null, $dir = null)
+    public function analyzeComposerData($composerJsonData, PackageFilter $packageFilter, $composerLockData = null, $dir = null): DependencyGraph
     {
         $rootPackageData = $this->parseJson($composerJsonData);
-        if ( ! isset($rootPackageData['name'])) {
+        if (!isset($rootPackageData['name'])) {
             $rootPackageData['name'] = '__root';
         }
 
@@ -60,7 +58,7 @@ class DependencyAnalyzer
         // dependencies, or the dependencies were not installed.
         if (empty($composerLockData)) {
             if ($this->hasDependencies($rootPackageData)) {
-                throw new MissingLockFileException();
+                throw new RuntimeException();
             }
 
             $graph = new DependencyGraph(new PackageNode($rootPackageData['name'], $rootPackageData));
@@ -92,8 +90,8 @@ class DependencyAnalyzer
         $graph = new DependencyGraph(new PackageNode($rootPackageData['name'], $rootPackageData));
         $graph->getRootPackage()->setAttribute('dir', $dir);
 
-        $vendorDir = $dir.'/'.(isset($rootPackageData['config']['vendor-dir']) ? $rootPackageData['config']['vendor-dir'] : 'vendor');
-        $lockData = $this->parseJson($composerLockData);
+        $vendorDir = $dir . '/' . ($rootPackageData['config']['vendor-dir'] ?? 'vendor');
+        $lockData  = $this->parseJson($composerLockData);
 
         // Add regular packages.
         if (isset($lockData['packages'])) {
@@ -144,7 +142,7 @@ class DependencyAnalyzer
             }
 
             $package = $graph->createPackage($packageData['name'], $packageData);
-            $package->setAttribute('dir', $vendorDir.'/'.$packageData['name']);
+            $package->setAttribute('dir', $vendorDir . '/' . $packageData['name']);
             $this->processLockedData($graph, $packageData);
         }
     }
@@ -153,7 +151,7 @@ class DependencyAnalyzer
     {
         $parsedData = json_decode($data, true);
         if ($parsedData === false) {
-            throw new \RuntimeException('Could not parse JSON data.');
+            throw new RuntimeException('Could not parse JSON data.');
         }
 
         return $parsedData;
@@ -204,7 +202,7 @@ class DependencyAnalyzer
         $package->setVersion($lockedPackageData['version']);
 
         if (isset($lockedPackageData['source']['reference'])
-                && $lockedPackageData['version'] !== $lockedPackageData['source']['reference']) {
+            && $lockedPackageData['version'] !== $lockedPackageData['source']['reference']) {
             $package->setSourceReference($lockedPackageData['source']['reference']);
         }
     }
@@ -214,7 +212,7 @@ class DependencyAnalyzer
      *
      * @return bool
      */
-    protected function hasDependencies(array $config)
+    protected function hasDependencies(array $config): bool
     {
         if (isset($config['require']) && $this->hasUserlandDependency($config['require'])) {
             return true;
@@ -232,7 +230,7 @@ class DependencyAnalyzer
      *
      * @return bool
      */
-    protected function hasUserlandDependency(array $requires)
+    protected function hasUserlandDependency(array $requires): bool
     {
         if (empty($requires)) {
             return false;

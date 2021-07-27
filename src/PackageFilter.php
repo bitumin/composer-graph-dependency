@@ -2,8 +2,6 @@
 
 namespace Kassko\Composer\GraphDependency;
 
-use Kassko\Composer\GraphDependency\Utils;
-
 class PackageFilter
 {
     private $filterConfig;
@@ -13,7 +11,7 @@ class PackageFilter
         $this->filterConfig = $filterConfig;
     }
 
-    public function filter($packageFullName, PackageFilterOptions $packageFilterOptions, array $packageData)
+    public function filter($packageFullName, PackageFilterOptions $packageFilterOptions, array $packageData): bool
     {
         if ($packageFilterOptions->isRoot()) {
             return false;
@@ -25,13 +23,13 @@ class PackageFilter
             }
 
             $nb = count($this->filterConfig['include_tags']);
-            for ($i = 0; $i < $nb; $i+=2) {
+            for ($i = 0; $i < $nb; $i += 2) {
                 if (
-                    $this->valueExistsInPath(
-                        $this->filterConfig['include_tags'][$i],
-                        $this->filterConfig['include_tags'][$i+1],
-                        $packageData['extra']
-                    )
+                $this->valueExistsInPath(
+                    $this->filterConfig['include_tags'][$i],
+                    $this->filterConfig['include_tags'][$i + 1],
+                    $packageData['extra']
+                )
                 ) {
                     return false;
                 }
@@ -40,13 +38,13 @@ class PackageFilter
 
         if (count($this->filterConfig['exclude_tags']) && isset($packageData['extra'])) {
             $nb = count($this->filterConfig['exclude_tags']);
-            for ($i = 0; $i < $nb; $i+=2) {
+            for ($i = 0; $i < $nb; $i += 2) {
                 if (
-                    $this->valueExistsInPath(
-                        $this->filterConfig['exclude_tags'][$i],
-                        $this->filterConfig['exclude_tags'][$i+1],
-                        $packageData['include_tags']['extra']
-                    )
+                $this->valueExistsInPath(
+                    $this->filterConfig['exclude_tags'][$i],
+                    $this->filterConfig['exclude_tags'][$i + 1],
+                    $packageData['include_tags']['extra']
+                )
                 ) {
                     return true;
                 }
@@ -54,13 +52,13 @@ class PackageFilter
         }
 
         if ('includes_all' === $this->filterConfig['default_filtering_mode']) {
-            if (in_array($packageFullName, $this->filterConfig['exclude_packages'])) {
+            if (in_array($packageFullName, $this->filterConfig['exclude_packages'], true)) {
                 return true;
             }
 
             list($vendorName, $packageName) = explode('/', $packageFullName, 2);
 
-            if (in_array($vendorName, $this->filterConfig['exclude_vendors'])) {
+            if (in_array($vendorName, $this->filterConfig['exclude_vendors'], true)) {
                 return true;
             }
 
@@ -69,19 +67,19 @@ class PackageFilter
 
         /** elseif ('excludes_all' === $this->filterConfig['default_filtering_mode']) */
 
-        if (in_array($packageFullName, $this->filterConfig['include_packages'])) {
+        if (in_array($packageFullName, $this->filterConfig['include_packages'], true)) {
             return false;
         }
 
         list($vendorName, $packageName) = explode('/', $packageFullName, 2);
-        if (in_array($vendorName, $this->filterConfig['include_vendors'])) {
+        if (in_array($vendorName, $this->filterConfig['include_vendors'], true)) {
             return false;
         }
 
         return true;
     }
 
-    public function filterDependency($packageFullName, DependencyPackageFilterOptions $packageFilterOptions, array $parentPackageData)
+    public function filterDependency($packageFullName, DependencyPackageFilterOptions $packageFilterOptions, array $parentPackageData): bool
     {
         if ($this->filterConfig['no_root_dev_dep'] && $packageFilterOptions->isDev()) {
             return true;
@@ -90,24 +88,24 @@ class PackageFilter
         list($vendorName, $packageName) = Utils::extractPackageNameParts($packageFullName);
 
         if (count($this->filterConfig['exclude_dep_packages'])
-            && in_array($packageFullName, $this->filterConfig['exclude_dep_packages'])) {
+            && in_array($packageFullName, $this->filterConfig['exclude_dep_packages'], true)) {
             return true;
         }
 
         if (count($this->filterConfig['include_dep_packages'])
-            && !in_array($packageFullName, $this->filterConfig['include_dep_packages'])) {
+            && !in_array($packageFullName, $this->filterConfig['include_dep_packages'], true)) {
 
             return true;
         }
 
         if (count($this->filterConfig['exclude_dep_vendors'])
-            && in_array($vendorName, $this->filterConfig['exclude_dep_vendors'])
+            && in_array($vendorName, $this->filterConfig['exclude_dep_vendors'], true)
         ) {
             return true;
         }
 
         if (count($this->filterConfig['include_dep_vendors'])
-            && !in_array($vendorName, $this->filterConfig['include_dep_vendors'])) {
+            && !in_array($vendorName, $this->filterConfig['include_dep_vendors'], true)) {
 
             return true;
         }
@@ -115,7 +113,7 @@ class PackageFilter
         return false;
     }
 
-    protected function valueExistsInPath($path, $value, array $config)
+    protected function valueExistsInPath($path, $value, array $config): bool
     {
         $pathParts = explode('.', $path);
 

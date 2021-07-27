@@ -4,7 +4,7 @@ namespace Kassko\Composer\GraphDependency;
 
 class Utils
 {
-	public static function getOptionAsArray($option)
+    public static function getOptionAsArray($option)
     {
         if (empty($option)) {
             return [];
@@ -16,7 +16,7 @@ class Utils
     public static function extractPackageNameParts($packageFullName)
     {
         if (false === strpos($packageFullName, '/')) {
-            $packageFullName = $packageFullName . '/' . $packageFullName;
+            $packageFullName .= '/' . $packageFullName;
         }
 
         return explode('/', $packageFullName, 2);

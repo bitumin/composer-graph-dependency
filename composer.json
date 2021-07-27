@@ -12,7 +12,8 @@
         "clue/graph-composer"       : "^1.0.0",
         "graphp/graphviz"           : "^0.2.0",
         "jms/composer-deps-analyzer": "^0.1",
-        "symfony/console"           : "^2.7"
+        "symfony/console"           : "^2.7",
+        "ext-json"                  : "*"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest"

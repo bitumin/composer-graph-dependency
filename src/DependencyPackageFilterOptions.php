@@ -6,14 +6,14 @@ class DependencyPackageFilterOptions
 {
     private $dev = false;
 
-    public function makeDev($dev = true)
+    public function makeDev($dev = true): DependencyPackageFilterOptions
     {
         $this->dev = $dev;
 
         return $this;
     }
 
-    public function isDev()
+    public function isDev(): bool
     {
         return $this->dev;
     }
