@@ -81,31 +81,44 @@ class PackageFilter
 
     public function filterDependency($packageFullName, DependencyPackageFilterOptions $packageFilterOptions, array $parentPackageData): bool
     {
-        if ($this->filterConfig['no_root_dev_dep'] && $packageFilterOptions->isDev()) {
+        if (
+            isset($this->filterConfig['no_root_dev_dep'])
+            && $this->filterConfig['no_root_dev_dep']
+            && $packageFilterOptions->isDev()
+        ) {
             return true;
         }
 
         list($vendorName, $packageName) = Utils::extractPackageNameParts($packageFullName);
 
-        if (count($this->filterConfig['exclude_dep_packages'])
+        if (
+            isset($this->filterConfig['exclude_dep_packages'])
+            && count($this->filterConfig['exclude_dep_packages'])
             && in_array($packageFullName, $this->filterConfig['exclude_dep_packages'], true)) {
             return true;
         }
 
-        if (count($this->filterConfig['include_dep_packages'])
-            && !in_array($packageFullName, $this->filterConfig['include_dep_packages'], true)) {
-
+        if (
+            isset($this->filterConfig['include_dep_packages'])
+            && count($this->filterConfig['include_dep_packages'])
+            && !in_array($packageFullName, $this->filterConfig['include_dep_packages'], true)
+        ) {
             return true;
         }
 
-        if (count($this->filterConfig['exclude_dep_vendors'])
+        if (
+            isset($this->filterConfig['exclude_dep_vendors'])
+            && count($this->filterConfig['exclude_dep_vendors'])
             && in_array($vendorName, $this->filterConfig['exclude_dep_vendors'], true)
         ) {
             return true;
         }
 
-        if (count($this->filterConfig['include_dep_vendors'])
-            && !in_array($vendorName, $this->filterConfig['include_dep_vendors'], true)) {
+        if (
+            isset($this->filterConfig['include_dep_vendors'])
+            && count($this->filterConfig['include_dep_vendors'])
+            && !in_array($vendorName, $this->filterConfig['include_dep_vendors'], true)
+        ) {
 
             return true;
         }
