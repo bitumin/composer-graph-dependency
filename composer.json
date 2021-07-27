@@ -1,20 +1,28 @@
 {
-    "name": "kassko/composer-graph-dependency",
-    "description": "Filters and displays graphes dependencies of packages installed",
-    "keywords": [
-        "composer", "graph", "dependency", "dependencies"
+    "name"       : "kassko/composer-graph-dependency",
+    "description": "Filters and displays graphs dependencies of packages installed",
+    "keywords"   : [
+        "composer",
+        "graph",
+        "dependency",
+        "dependencies"
     ],
-    "require": {
-        "php": ">=5.5.0 || ^7.0",
-        "clue/graph-composer": "^1.0.0",
-        "graphp/graphviz": "^0.2.0",
-        "jms/composer-deps-analyzer": "0.1.*",
-        "symfony/console": "^2.7 || ^3.0"
+    "require"    : {
+        "php"                       : "^7.0",
+        "clue/graph-composer"       : "^1.0.0",
+        "graphp/graphviz"           : "^0.2.0",
+        "jms/composer-deps-analyzer": "^0.1",
+        "symfony/console"           : "^2.7"
     },
-    "autoload": {
+    "require-dev": {
+        "roave/security-advisories": "dev-latest"
+    },
+    "autoload"   : {
         "psr-4": {
             "Kassko\\Composer\\GraphDependency\\": "src"
         }
     },
-    "bin": ["script/composer-dependency"]
+    "bin"        : [
+        "script/composer-dependency"
+    ]
 }
