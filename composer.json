@@ -1,5 +1,5 @@
 {
-    "name"       : "kassko/composer-graph-dependency",
+    "name"       : "bitumin/composer-graph-dependency",
     "description": "Filters and displays graphs dependencies of packages installed",
     "keywords"   : [
         "composer",
