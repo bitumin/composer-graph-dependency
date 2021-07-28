@@ -58,7 +58,7 @@ class DependencyAnalyzer
         // dependencies, or the dependencies were not installed.
         if (empty($composerLockData)) {
             if ($this->hasDependencies($rootPackageData)) {
-                throw new RuntimeException();
+                throw new RuntimeException('Root node seems to not have any dependencies.');
             }
 
             $graph = new DependencyGraph(new PackageNode($rootPackageData['name'], $rootPackageData));
@@ -227,11 +227,11 @@ class DependencyAnalyzer
      */
     protected function hasDependencies(array $config): bool
     {
-        if (isset($config['require']) && $this->hasUserlandDependency($config['require'])) {
+        if (isset($config['require']) || $this->hasUserlandDependency($config['require'])) {
             return true;
         }
 
-        if (isset($config['require-dev']) && $this->hasUserlandDependency($config['require-dev'])) {
+        if (isset($config['require-dev']) || $this->hasUserlandDependency($config['require-dev'])) {
             return true;
         }
 
