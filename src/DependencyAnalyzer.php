@@ -95,12 +95,24 @@ class DependencyAnalyzer
 
         // Add regular packages.
         if (isset($lockData['packages'])) {
-            $this->addPackages($graph, $lockData['packages'], $vendorDir);
+            $packages = [];
+            foreach ($lockData['packages'] as $package) {
+                if (!$packageFilter->filterDependency($package['name'], new DependencyPackageFilterOptions(), [])) {
+                    $packages[] = $package;
+                }
+            }
+            $this->addPackages($graph, $packages, $vendorDir);
         }
 
         // Add development packages.
         if (isset($lockData['packages-dev'])) {
-            $this->addPackages($graph, $lockData['packages-dev'], $vendorDir);
+            $devPackages = [];
+            foreach ($lockData['packages'] as $package) {
+                if (!$packageFilter->filterDependency($package['name'], new DependencyPackageFilterOptions(), [])) {
+                    $devPackages[] = $package;
+                }
+            }
+            $this->addPackages($graph, $devPackages, $vendorDir);
         }
 
         // Connect dependent packages.

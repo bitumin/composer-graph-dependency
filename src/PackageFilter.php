@@ -41,8 +41,8 @@ class PackageFilter
 
         if (
             !empty($this->filterConfig['exclude_tags'])
-            && count($this->filterConfig['exclude_tags'])
             && isset($packageData['extra'])
+            && count($this->filterConfig['exclude_tags'])
         ) {
             $nb = count($this->filterConfig['exclude_tags']);
             for ($i = 0; $i < $nb; $i += 2) {
