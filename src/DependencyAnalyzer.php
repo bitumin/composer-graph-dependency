@@ -57,7 +57,7 @@ class DependencyAnalyzer
         // If there is no composer.lock file, then either the project has no
         // dependencies, or the dependencies were not installed.
         if (empty($composerLockData)) {
-            if ($this->hasDependencies($rootPackageData)) {
+            if (!$this->hasDependencies($rootPackageData)) {
                 throw new RuntimeException('Root node seems to not have any dependencies.');
             }
 
