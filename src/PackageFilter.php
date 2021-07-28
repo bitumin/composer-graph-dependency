@@ -17,7 +17,10 @@ class PackageFilter
             return false;
         }
 
-        if (count($this->filterConfig['include_tags'])) {
+        if (
+            !empty($this->filterConfig['include_tags'])
+            && count($this->filterConfig['include_tags'])
+        ) {
             if (!isset($packageData['extra'])) {
                 return true;
             }
@@ -36,7 +39,11 @@ class PackageFilter
             }
         }
 
-        if (count($this->filterConfig['exclude_tags']) && isset($packageData['extra'])) {
+        if (
+            !empty($this->filterConfig['exclude_tags'])
+            && count($this->filterConfig['exclude_tags'])
+            && isset($packageData['extra'])
+        ) {
             $nb = count($this->filterConfig['exclude_tags']);
             for ($i = 0; $i < $nb; $i += 2) {
                 if (
@@ -52,25 +59,37 @@ class PackageFilter
         }
 
         if ('includes_all' === $this->filterConfig['default_filtering_mode']) {
-            if (in_array($packageFullName, $this->filterConfig['exclude_packages'], true)) {
+            if (
+                !empty($this->filterConfig['exclude_packages'])
+                && in_array($packageFullName, $this->filterConfig['exclude_packages'], true)
+            ) {
                 return true;
             }
 
-            list($vendorName, $packageName) = explode('/', $packageFullName, 2);
+            list($vendorName,) = explode('/', $packageFullName, 2);
 
-            if (in_array($vendorName, $this->filterConfig['exclude_vendors'], true)) {
+            if (
+                !empty($this->filterConfig['exclude_vendors'])
+                && in_array($vendorName, $this->filterConfig['exclude_vendors'], true)
+            ) {
                 return true;
             }
 
             return false;
         }
 
-        if (in_array($packageFullName, $this->filterConfig['include_packages'], true)) {
+        if (
+            !empty($this->filterConfig['include_packages'])
+            && in_array($packageFullName, $this->filterConfig['include_packages'], true)
+        ) {
             return false;
         }
 
-        list($vendorName, $packageName) = explode('/', $packageFullName, 2);
-        if (in_array($vendorName, $this->filterConfig['include_vendors'], true)) {
+        list($vendorName,) = explode('/', $packageFullName, 2);
+        if (
+            !empty($this->filterConfig['include_vendors'])
+            && in_array($vendorName, $this->filterConfig['include_vendors'], true)
+        ) {
             return false;
         }
 
@@ -87,7 +106,7 @@ class PackageFilter
             return true;
         }
 
-        list($vendorName, $packageName) = Utils::extractPackageNameParts($packageFullName);
+        list($vendorName,) = Utils::extractPackageNameParts($packageFullName);
 
         if (
             !empty($this->filterConfig['exclude_dep_packages'])
