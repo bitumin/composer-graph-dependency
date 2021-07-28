@@ -12,6 +12,5 @@ class App extends BaseApp
         parent::__construct('composer-dependency', '@git_tag@');
 
         $this->add(new Command\Export());
-        $this->add(new Command\MultiExport());
     }
 }

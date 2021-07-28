@@ -136,8 +136,7 @@ class DependencyAnalyzer
     protected function addPackages(DependencyGraph $graph, array $packages, $vendorDir)
     {
         foreach ($packages as $packageData) {
-            /** Upgrade to 1.0.1 to be able to use isRootPackageName() */
-            if (/*$graph->isRootPackageName($packageData['name']) ||*/ $graph->hasPackage($packageData['name'])) {
+            if ($graph->isRootPackageName($packageData['name']) || $graph->hasPackage($packageData['name'])) {
                 continue;
             }
 
@@ -201,8 +200,10 @@ class DependencyAnalyzer
 
         $package->setVersion($lockedPackageData['version']);
 
-        if (isset($lockedPackageData['source']['reference'])
-            && $lockedPackageData['version'] !== $lockedPackageData['source']['reference']) {
+        if (
+            isset($lockedPackageData['source']['reference'])
+            && $lockedPackageData['version'] !== $lockedPackageData['source']['reference']
+        ) {
             $package->setSourceReference($lockedPackageData['source']['reference']);
         }
     }
